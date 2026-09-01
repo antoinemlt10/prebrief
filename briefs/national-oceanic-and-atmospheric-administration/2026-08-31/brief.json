@@ -66,6 +66,14 @@
   },
   "gaps": [
     {
+      "searched": [
+        "federal register",
+        "gdelt",
+        "usaspending"
+      ],
+      "topic": "recent activity"
+    },
+    {
       "searched": [],
       "topic": "decision route"
     },
@@ -76,6 +84,7 @@
   ],
   "movement_note": "Nothing in the window touched commercial data, data buy, data purchase, satellite data, weather data, weather services, remote sensing, earth observation, environmental monitoring, space-based observation.",
   "questions": [
+    "What has changed at National Oceanic and Atmospheric Administration in the last six months that is not public?",
     "Which office signs off, and who else has to agree before it does?",
     "How do you see the relationship between our organizations today?"
   ],
@@ -88,7 +97,8 @@
     "value": "buyer"
   },
   "run_notes": [
-    "No English-language headline names National Oceanic and Atmospheric Administration in the 365 days to 2026-08-31. Searched: National Oceanic and Atmospheric Administration, NOAA."
+    "gdelt matched on the broader term \"NOAA\", not the full name — confirm these records describe the right body.",
+    "7 recent claim(s) were excluded — none touched the reader's domain (commercial data, data buy, data purchase, satellite data, weather data, weather services, remote sensing, earth observation, environmental monitoring, space-based observation)."
   ],
   "sections": {
     "check_first": [],

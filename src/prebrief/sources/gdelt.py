@@ -69,8 +69,12 @@ class GdeltSource:
     env_key = None
 
     def url_for(self, term: str, ctx: RunContext) -> str:
+        # Quotes make a phrase, and GDELT rejects a quoted phrase as short as
+        # "NOAA" outright ("too short"). A single plain word goes unquoted; a
+        # hyphenated one keeps its quotes, since a bare hyphen is GDELT
+        # operator syntax.
         query = {
-            "query": f'"{term}"',
+            "query": term if term.isalnum() else f'"{term}"',
             "mode": "artlist",
             "maxrecords": 40,
             "format": "json",

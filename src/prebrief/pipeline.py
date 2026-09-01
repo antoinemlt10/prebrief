@@ -73,10 +73,21 @@ def build(
         c.id for r in results if r.source == "wikidata" for c in r.claims
         if c.id in claims
     ]
-    _fill_sections(brief, ctx, pinned, reader)
+    filtered_out = _fill_sections(brief, ctx, pinned, reader)
     brief.relationship, brief.relationship_support = _infer_relationship(brief, results)
-    brief.gaps = _find_gaps(sources, results)
+    # A domain filter that emptied "What moved" leaves a real gap: things
+    # happened, none in our market — so recent activity is unanswered.
+    brief.gaps = _find_gaps(
+        sources, results, force_recent=brief.movement_note is not None
+    )
     brief.run_notes = _notes(entity, results, scoped)
+    if filtered_out and reader is not None:
+        # A silent filter is worse than a visible one — announced the same way
+        # the scope gate announces its drops.
+        brief.run_notes.append(
+            f"{filtered_out} recent claim(s) were excluded — none touched the "
+            f"reader's domain ({', '.join(reader.domain)})."
+        )
     _trim_to_budget(brief)
     brief.validate()
     return brief, results
@@ -102,7 +113,7 @@ def _drop_ancient(
 
 def _fill_sections(
     brief: Brief, ctx: RunContext, pinned: list[str], reader: Reader | None
-) -> None:
+) -> int:
     """`pinned` leads the identity section: claims about what the organization
     is, from entity resolution.
 
@@ -136,8 +147,10 @@ def _fill_sections(
     # to unfiltered results.
     used = set(brief.identity)
     moved = [c for c in recent if c.id not in used]
+    filtered_out = 0
     if reader is not None:
         in_domain = [c for c in moved if reader.in_domain(c)]
+        filtered_out = len(moved) - len(in_domain)
         if moved and not in_domain:
             brief.movement_note = (
                 f"Nothing in the window touched {', '.join(reader.domain)}."
@@ -147,6 +160,7 @@ def _fill_sections(
 
     used |= set(brief.movement)
     brief.check_first = [c.id for c in suspect if c.id not in used][:CHECK_MAX]
+    return filtered_out
 
 
 def _infer_relationship(
@@ -175,10 +189,16 @@ def _infer_relationship(
     return Relationship.UNKNOWN, []
 
 
-def _find_gaps(sources: list[Source], results: list[SourceResult]) -> list[Gap]:
+def _find_gaps(
+    sources: list[Source], results: list[SourceResult], *, force_recent: bool = False
+) -> list[Gap]:
     """A topic is a gap when every source that could have covered it came back
     with nothing. The searched-source list is what makes the gap honest — it
-    says where we looked, not just that we failed."""
+    says where we looked, not just that we failed.
+
+    `force_recent` registers recent activity as a gap even when sources found
+    things — the reader-domain filter removed all of them, so the question is
+    still unanswered."""
     by_name = {r.source: r for r in results}
     gaps: list[Gap] = []
     for topic in GapTopic:
@@ -186,7 +206,10 @@ def _find_gaps(sources: list[Source], results: list[SourceResult]) -> list[Gap]:
         if not covering:
             gaps.append(Gap(topic=topic, searched=()))
             continue
-        if any(by_name.get(s.name) and by_name[s.name].claims for s in covering):
+        forced = force_recent and topic is GapTopic.RECENT_ACTIVITY
+        if not forced and any(
+            by_name.get(s.name) and by_name[s.name].claims for s in covering
+        ):
             continue
         gaps.append(Gap(topic=topic, searched=tuple(sorted(s.name for s in covering))))
     return gaps

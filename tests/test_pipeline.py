@@ -348,13 +348,20 @@ def test_what_moved_answers_for_the_readers_market(seeded):
 
 def test_an_emptied_movement_section_says_so(seeded):
     """When the domain filter empties "What moved", the brief says which fact
-    happened — never a silent fallback to unfiltered results."""
+    happened — never a silent fallback to unfiltered results. A silent filter
+    is worse than a visible one, so the brief carries all three signals: the
+    in-section line, a recent-activity gap, and a run note naming what was
+    filtered against which terms."""
     from prebrief.reader import Reader
 
     _, ctx = seeded
     brief, _ = build(ORG, ctx, reader=Reader(domain=("orbital lasers",)))
     assert brief.movement == []
     assert brief.movement_note == "Nothing in the window touched orbital lasers."
+    assert any(g.topic.value == "recent activity" for g in brief.gaps)
+    assert any(
+        "excluded" in n and "orbital lasers" in n for n in brief.run_notes
+    ), "the filter must announce its drops, like the scope gate does"
     markdown = render_markdown(brief)  # assert_sourced runs inside
     assert "- Nothing in the window touched orbital lasers." in markdown
 
@@ -523,6 +530,17 @@ def test_the_ladder_learns_the_initialism():
         slug=slugify("NOAA NESDIS Commercial Data Program"),
     )
     assert "NNCDP" not in cdp.query_terms()
+
+
+def test_gdelt_queries_a_single_word_unquoted(seeded):
+    """GDELT rejects the quoted phrase "NOAA" as too short, so an initialism
+    in the ladder was useless until the quotes came off. Multi-word and
+    hyphenated terms keep theirs — a bare hyphen is GDELT operator syntax."""
+    _, ctx = seeded
+    source = GdeltSource()
+    assert "query=NOAA&" in source.url_for("NOAA", ctx)
+    assert "query=%22Spire+Global%22" in source.url_for("Spire Global", ctx)
+    assert "query=%22In-Q-Tel%22" in source.url_for("In-Q-Tel", ctx)
 
 
 def test_a_too_short_phrase_rejection_walks_down_the_ladder(seeded):

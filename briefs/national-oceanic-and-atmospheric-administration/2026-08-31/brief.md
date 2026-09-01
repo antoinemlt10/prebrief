@@ -17,13 +17,16 @@ Resting on: [^fdb751f2f248], [^b7acb6c479a3]
 - Nothing in the window touched commercial data, data buy, data purchase, satellite data, weather data, weather services, remote sensing, earth observation, environmental monitoring, space-based observation.
 
 ## Questions to ask
-1. Which office signs off, and who else has to agree before it does?
-2. How do you see the relationship between our organizations today?
+1. What has changed at National Oceanic and Atmospheric Administration in the last six months that is not public?
+2. Which office signs off, and who else has to agree before it does?
+3. How do you see the relationship between our organizations today?
 
 ## What I could not find
+- recent activity — searched federal register, gdelt, usaspending, nothing found
 - decision route — no source in this run covers it
 - relationship to us — no source in this run covers it
-- No English-language headline names National Oceanic and Atmospheric Administration in the 365 days to 2026-08-31. Searched: National Oceanic and Atmospheric Administration, NOAA.
+- gdelt matched on the broader term "NOAA", not the full name — confirm these records describe the right body.
+- 7 recent claim(s) were excluded — none touched the reader's domain (commercial data, data buy, data purchase, satellite data, weather data, weather services, remote sensing, earth observation, environmental monitoring, space-based observation).
 
 ---
 
