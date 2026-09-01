@@ -1,0 +1,7 @@
+{
+ "body": "{\"spending_level\":\"awards\",\"limit\":10,\"results\":[],\"page_metadata\":{\"page\":1,\"hasNext\":false,\"last_record_unique_id\":null,\"last_record_sort_value\":\"None\"},\"messages\":[\"For searches, time period start and end dates are currently limited to an earliest date of 2007-10-01.  For data going back to 2000-10-01, use either the Custom Award Download feature on the website or one of our download or bulk_download API endpoints as listed on https://api.usaspending.gov/docs/endpoints. \"]}",
+ "body_sha256": "4541bad5c1e19f669aebe673e33107ea6bd826fe38d0c2494438498e3d303483",
+ "fetched_at": "2026-09-01T13:23:30.124687+00:00",
+ "status": 200,
+ "url": "https://api.usaspending.gov/api/v2/search/spending_by_award/"
+}

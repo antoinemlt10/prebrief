@@ -1,0 +1,11 @@
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# The example briefs and the cache behind them ARE the evidence — they are
+# committed on purpose, so anyone can reproduce them byte-for-byte with no key.
+
+# The cover memo is addressed to one reader, not to the public repo.
+docs/interview-notes.md

@@ -1,0 +1,87 @@
+{
+  "as_of": "2026-08-31",
+  "claims": [
+    {
+      "id": "0e46f571aa0d",
+      "published": "2025-03-17",
+      "retrieved": "2026-09-01T13:23:29.386756+00:00",
+      "snippet": "In this document, the Federal Communications Commission (FCC or Commission) proposes and seeks comment on changes to the rules that govern the operations of three distinct bands of spectrum, modernizing rules to facilita",
+      "source_title": "Federal Register — Facilitating Opportunities for Advanced Air Mobility",
+      "source_url": "https://www.federalregister.gov/documents/2025/03/17/2025-03602/facilitating-opportunities-for-advanced-air-mobility",
+      "text": "Federal Communications Commission published a proposed rule titled \"Facilitating Opportunities for Advanced Air Mobility\" on 2025-03-17.",
+      "tier": "filed"
+    },
+    {
+      "id": "d3873b636810",
+      "published": "2024-09-04",
+      "retrieved": "2026-09-01T13:23:29.386756+00:00",
+      "snippet": "The National Telecommunications and Information Administration (NTIA) hereby requests comments on the challenges surrounding data center growth, resilience and security in the United States amidst a surge of computing po",
+      "source_title": "Federal Register — Request for Comments on Bolstering Data Center Growth, Resilience, and",
+      "source_url": "https://www.federalregister.gov/documents/2024/09/04/2024-19524/request-for-comments-on-bolstering-data-center-growth-resilience-and-security",
+      "text": "Commerce Department published a notice titled \"Request for Comments on Bolstering Data Center Growth, Resilience, and Security\" on 2024-09-04.",
+      "tier": "filed"
+    },
+    {
+      "id": "40489d95a82e",
+      "published": "2002-05-02",
+      "retrieved": "2026-09-01T13:23:29.386756+00:00",
+      "snippet": "cussion on universities and R&D technology issues, a presentation on the In-Q-Tel, a venture capital organization (tentative), an update on the ATP competition, and a presentation on a study on the ATP Computer Based Sof",
+      "source_title": "Federal Register — Advanced Technology Program Advisory Committee",
+      "source_url": "https://www.federalregister.gov/documents/2002/05/02/02-10955/advanced-technology-program-advisory-committee",
+      "text": "Commerce Department published a notice titled \"Advanced Technology Program Advisory Committee\" on 2002-05-02.",
+      "tier": "filed"
+    }
+  ],
+  "entity": {
+    "aliases": [],
+    "cik": null,
+    "description": "American defense industry venture capital firm",
+    "homepage": "https://www.iqt.org/",
+    "kind": "nonprofit",
+    "name": "In-Q-Tel",
+    "qid": "Q3109467",
+    "resolution_notes": [],
+    "slug": "in-q-tel",
+    "thin": false
+  },
+  "gaps": [
+    {
+      "searched": [
+        "usaspending"
+      ],
+      "topic": "budget"
+    },
+    {
+      "searched": [],
+      "topic": "decision route"
+    },
+    {
+      "searched": [],
+      "topic": "relationship to us"
+    }
+  ],
+  "questions": [
+    "What budget line does this sit on, and for which fiscal year?",
+    "Which office signs off, and who else has to agree before it does?",
+    "How do you see the relationship between our organizations today?"
+  ],
+  "relationship": {
+    "inferred": true,
+    "supported_by": [],
+    "value": "undetermined"
+  },
+  "run_notes": [
+    "No federal contract in the 365 days to 2026-08-31 lists any of these as awarding agency or recipient: In-Q-Tel.",
+    "No English-language headline names In-Q-Tel in the 365 days to 2026-08-31. Searched: In-Q-Tel."
+  ],
+  "sections": {
+    "check_first": [
+      "40489d95a82e"
+    ],
+    "identity": [
+      "0e46f571aa0d",
+      "d3873b636810"
+    ],
+    "movement": []
+  }
+}

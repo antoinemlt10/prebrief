@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prebrief"
+version = "0.1.0"
+description = "One-page meeting briefs on organizations, built only from public sources, with every sentence traceable to a URL."
+requires-python = ">=3.10"
+dependencies = [
+  "requests>=2.31",
+  "spacy>=3.7",          # privacy gate — not optional, see src/prebrief/privacy.py
+  "trafilatura>=1.8",    # readable text out of an organization's own pages
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+prebrief = "prebrief.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

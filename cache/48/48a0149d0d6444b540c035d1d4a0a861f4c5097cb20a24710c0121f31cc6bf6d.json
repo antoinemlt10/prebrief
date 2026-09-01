@@ -1,0 +1,7 @@
+{
+ "body": "{\"searchinfo\":{\"search\":\"Spire Global\"},\"search\":[{\"id\":\"Q19877982\",\"title\":\"Q19877982\",\"pageid\":21508206,\"concepturi\":\"http://www.wikidata.org/entity/Q19877982\",\"repository\":\"wikidata\",\"url\":\"//www.wikidata.org/wiki/Q19877982\",\"display\":{\"label\":{\"value\":\"Spire Global\",\"language\":\"en\"},\"description\":{\"value\":\"space-to-cloud data and analytics company\",\"language\":\"en\"}},\"label\":\"Spire Global\",\"description\":\"space-to-cloud data and analytics company\",\"match\":{\"type\":\"label\",\"language\":\"en\",\"text\":\"Spire Global\"}}],\"success\":1}",
+ "body_sha256": "3944b6d7a5c26c4382ab2247c2948c0e58093583d456ceab0e6624ff606bed43",
+ "fetched_at": "2026-09-01T13:22:48.789363+00:00",
+ "status": 200,
+ "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Spire%20Global&language=en&format=json&limit=5&type=item"
+}

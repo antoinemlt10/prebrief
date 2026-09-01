@@ -1,0 +1,13 @@
+# One organization per line. Three meeting archetypes, three source classes.
+#
+# Note on granularity: the counterparty is the agency, not a sub-programme
+# inside it. The Federal Register indexes by agency and USAspending by agency
+# and recipient — neither indexes programme offices, so asking for one is
+# asking a question the public record cannot answer. The brief will say so
+# honestly, which is correct behaviour and a useless demonstration.
+#
+# The investor is In-Q-Tel rather than a founder-branded fund: press about
+# those leads with the founder, and briefs never carry a person.
+National Oceanic and Atmospheric Administration
+Spire Global
+In-Q-Tel
