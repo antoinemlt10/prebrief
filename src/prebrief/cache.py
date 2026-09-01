@@ -131,6 +131,14 @@ class Cache:
             self._write(path, response)
         return response
 
+    def forget(self, url: str, *, payload: dict | None = None) -> None:
+        """Drop a cached entry. For responses that turn out not to be results
+        — GDELT delivers its rate-limit notice as HTTP 200, and caching that
+        would replay the refusal forever."""
+        path = self.path_for(url, payload)
+        if path.exists():
+            path.unlink()
+
     def put(
         self, url: str, body: str, *, payload: dict | None = None, status: int = 200
     ) -> None:

@@ -11,6 +11,7 @@ dependencies = [
   "requests>=2.31",
   "spacy>=3.7",          # privacy gate — not optional, see src/prebrief/privacy.py
   "trafilatura>=1.8",    # readable text out of an organization's own pages
+  "pyyaml>=6.0",         # reader.yaml — whose meeting the brief is for
 ]
 
 [project.optional-dependencies]

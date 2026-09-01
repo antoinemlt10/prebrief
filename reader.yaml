@@ -1,0 +1,21 @@
+# Who the brief is for. These terms define what the reader's organization
+# does commercially; "What moved" keeps only claims that touch them, because
+# a counterparty as large as a federal agency does a hundred things and the
+# reader is walking into a meeting about exactly one of them.
+#
+# Keep these strictly market-and-procurement words, never physics words.
+# What the tool has no standing to opine on — atmospheric science, forecast
+# quality — is a different mechanism: src/prebrief/scope.py. The two must
+# stay disjoint; a term in both would be admitted by one filter and dropped
+# by the other.
+domain:
+  - commercial data
+  - data buy
+  - data purchase
+  - satellite data
+  - weather data
+  - weather services
+  - remote sensing
+  - earth observation
+  - environmental monitoring
+  - space-based observation

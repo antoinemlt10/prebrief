@@ -23,6 +23,10 @@ __all__ = ["ScopeGate", "ScopeReport"]
 # Terms that mean a sentence is making a claim about atmospheric data or
 # forecast quality. Being over-broad here is cheap: it drops a claim we did not
 # need. Being under-broad puts an opinion in the brief we have no standing for.
+#
+# Disjoint by design from reader.yaml: that file holds the market-and-
+# procurement words that define the reader's business; this regex holds the
+# science the tool must not touch. Never let a term appear in both.
 _OUT_OF_SCOPE = re.compile(
     r"\b(?:"
     r"forecast(?:ing)?\s+(?:skill|accuracy|error|quality|performance)|"

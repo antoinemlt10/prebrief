@@ -123,7 +123,19 @@ class Entity:
         because a match on a broader term is weaker evidence and the brief
         should say so.
         """
-        return _term_ladder(self.name, self.aliases)
+        terms = _term_ladder(self.name, self.aliases)
+        # The derived initialism is how headlines actually name an agency — no
+        # headline spells out the seven-word official name, so a ladder without
+        # NOAA never finds NOAA's press. Two guards: names already carrying an
+        # acronym token must not grow junk like NNCDP, and a searched
+        # initialism needs four letters — three-letter ones match too many
+        # strangers to be worth querying, though they still count as a name
+        # in the relevance test.
+        no_acronym_words = not any(w.isupper() and len(w) >= 2 for w in self.name.split())
+        if no_acronym_words and (initialism := self.initialism()) and len(initialism) >= 4:
+            if initialism.casefold() not in {t.casefold() for t in terms}:
+                terms.append(initialism)
+        return terms
 
     def to_dict(self) -> dict:
         return {

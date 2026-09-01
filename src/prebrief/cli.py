@@ -49,6 +49,12 @@ def main(argv: list[str] | None = None) -> int:
         "--offline", action="store_true", help="fail on a cache miss instead of fetching"
     )
     run.add_argument("--refresh", action="store_true", help="bypass the cache")
+    run.add_argument(
+        "--reader",
+        type=Path,
+        default=Path("reader.yaml"),
+        help="whose meeting this is: domain terms that filter 'What moved'",
+    )
 
     verify = sub.add_parser("verify", help="re-check every source behind a brief")
     verify.add_argument("brief_dir", type=Path)
@@ -150,6 +156,8 @@ def _run(args) -> int:
         print("nothing to do: pass an organization name or --batch", file=sys.stderr)
         return 2
 
+    from .reader import load_reader
+
     cache = Cache(args.cache, offline=args.offline)
     ctx = RunContext(
         cache=cache,
@@ -157,11 +165,12 @@ def _run(args) -> int:
         window_days=args.window_days,
         refresh=args.refresh,
     )
+    reader = load_reader(args.reader)
 
     failures = 0
     for name in names:
         try:
-            brief, results = build(name, ctx, default_sources())
+            brief, results = build(name, ctx, default_sources(), reader=reader)
             path = _write(brief, args.out)
         except PersonNameFound as exc:
             print(f"✗ {name}\n  {exc}", file=sys.stderr)

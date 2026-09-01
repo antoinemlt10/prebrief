@@ -11,9 +11,12 @@ long "could not find" list are correct outputs, not failures.
 
 from __future__ import annotations
 
+from datetime import date
+
 from .brief import Brief, Gap, GapTopic, MAX_CLAIMS, Relationship
 from .claims import ClaimSet, Tier
 from .entities import Entity, Kind, resolve
+from .reader import Reader
 from .scope import ScopeGate
 from .sources.base import RunContext, Source, SourceResult
 from .sources.federal_register import FederalRegisterSource
@@ -29,6 +32,11 @@ IDENTITY_MAX = 3
 MOVEMENT_MAX = 5
 CHECK_MAX = 2
 
+# A dated record older than this is archaeology, not background — a tentative
+# agenda item from 2002 has no business in a meeting brief. Undated claims
+# (Wikidata identity facts) are exempt: the floor keys on `published`.
+MAX_AGE_YEARS = 8
+
 
 def default_sources() -> list[Source]:
     return [
@@ -40,12 +48,16 @@ def default_sources() -> list[Source]:
 
 
 def build(
-    name: str, ctx: RunContext, sources: list[Source] | None = None
+    name: str,
+    ctx: RunContext,
+    sources: list[Source] | None = None,
+    reader: Reader | None = None,
 ) -> tuple[Brief, list[SourceResult]]:
     sources = sources or default_sources()
     entity = resolve(name, ctx.cache)
 
     results = [source.collect(entity, ctx) for source in sources]
+    _drop_ancient(results, entity, ctx.as_of)
 
     pool = ClaimSet()
     for result in results:
@@ -61,7 +73,7 @@ def build(
         c.id for r in results if r.source == "wikidata" for c in r.claims
         if c.id in claims
     ]
-    _fill_sections(brief, ctx, pinned)
+    _fill_sections(brief, ctx, pinned, reader)
     brief.relationship, brief.relationship_support = _infer_relationship(brief, results)
     brief.gaps = _find_gaps(sources, results)
     brief.run_notes = _notes(entity, results, scoped)
@@ -70,7 +82,27 @@ def build(
     return brief, results
 
 
-def _fill_sections(brief: Brief, ctx: RunContext, pinned: list[str]) -> None:
+def _drop_ancient(
+    results: list[SourceResult], entity: Entity, as_of: date
+) -> None:
+    """The absolute date floor. Applied to source results so the gap report
+    stays honest: a source whose only find was ancient has found nothing."""
+    floor = date(as_of.year - MAX_AGE_YEARS, as_of.month, min(as_of.day, 28))
+    for result in results:
+        had = bool(result.claims)
+        result.claims = [
+            c for c in result.claims if not c.published or c.published >= floor
+        ]
+        if had and not result.claims and not result.note:
+            result.note = (
+                f"Everything {result.source} holds on {entity.name} is older "
+                f"than {MAX_AGE_YEARS} years — dropped; a brief is not an archive."
+            )
+
+
+def _fill_sections(
+    brief: Brief, ctx: RunContext, pinned: list[str], reader: Reader | None
+) -> None:
     """`pinned` leads the identity section: claims about what the organization
     is, from entity resolution.
 
@@ -96,8 +128,22 @@ def _fill_sections(brief: Brief, ctx: RunContext, pinned: list[str]) -> None:
 
     brief.identity = (pinned + [c.id for c in background])[:IDENTITY_MAX]
 
+    # "What moved" answers for the reader's market, not the entity's whole
+    # remit — every coral-reef notice is genuinely about NOAA and none of it
+    # belongs in a commercial-data meeting. Identity stays entity-level: a
+    # Wikidata description is about who they are, not about our market. When
+    # the filter empties the section, the brief says so; it never falls back
+    # to unfiltered results.
     used = set(brief.identity)
-    brief.movement = [c.id for c in recent if c.id not in used][:MOVEMENT_MAX]
+    moved = [c for c in recent if c.id not in used]
+    if reader is not None:
+        in_domain = [c for c in moved if reader.in_domain(c)]
+        if moved and not in_domain:
+            brief.movement_note = (
+                f"Nothing in the window touched {', '.join(reader.domain)}."
+            )
+        moved = in_domain
+    brief.movement = [c.id for c in moved][:MOVEMENT_MAX]
 
     used |= set(brief.movement)
     brief.check_first = [c.id for c in suspect if c.id not in used][:CHECK_MAX]

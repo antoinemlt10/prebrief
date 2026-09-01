@@ -12,7 +12,7 @@ from datetime import date, datetime
 from urllib.parse import urlencode
 
 from ..claims import Claim, Tier
-from ..entities import Entity
+from ..entities import Entity, Kind
 from .base import (
     RunContext,
     SourceResult,
@@ -72,6 +72,15 @@ class FederalRegisterSource:
                 # Title plus abstract only — the Register matched the body, and
                 # a body mention proves nothing about what the document is about.
                 if not relevant(f"{d.get('title', '')} {d.get('abstract') or ''}", entity):
+                    continue
+                # A government entity publishes its own notices. A Transportation
+                # Department NEPA filing that consults NOAA is about the road,
+                # not the agency — so the publishing agency must be the entity.
+                # Companies never publish in the Register; the rule would empty
+                # every company brief, so it applies to government only.
+                if entity.kind is Kind.GOVERNMENT and not relevant(
+                    " ".join(d.get("agency_names") or []), entity
+                ):
                     continue
                 key = (clean(d.get("title", "")), d.get("publication_date") or "")
                 if key in seen:

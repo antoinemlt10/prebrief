@@ -52,36 +52,6 @@
       "tier": "reported"
     },
     {
-      "id": "6a5d3fc8f908",
-      "published": "2026-08-19",
-      "retrieved": "2026-09-01T13:23:27.986984+00:00",
-      "snippet": "Spire Global ( SPIR ) Q2 2026 Earnings Call Transcript",
-      "source_title": "fool.com — Spire Global ( SPIR ) Q2 2026 Earnings Call Transcript",
-      "source_url": "https://www.fool.com/earnings/call-transcripts/2026/08/19/spire-global-spir-q2-2026-earnings-call-transcript/?source=iedfolrf0000001",
-      "text": "fool.com reported \"Spire Global ( SPIR ) Q2 2026 Earnings Call Transcript\" on 2026-08-19.",
-      "tier": "reported"
-    },
-    {
-      "id": "78aaf21a1f00",
-      "published": "2026-08-18",
-      "retrieved": "2026-09-01T13:23:27.986984+00:00",
-      "snippet": "Spire Global ( NYSE : SPIR ) Upgraded at Wall Street Zen",
-      "source_title": "themarketsdaily.com — Spire Global ( NYSE : SPIR ) Upgraded at Wall Street Zen",
-      "source_url": "https://www.themarketsdaily.com/2026/08/18/spire-global-nysespir-upgraded-at-wall-street-zen.html",
-      "text": "themarketsdaily.com reported \"Spire Global ( NYSE : SPIR ) Upgraded at Wall Street Zen\" on 2026-08-18.",
-      "tier": "reported"
-    },
-    {
-      "id": "4a10f2b4fb84",
-      "published": "2026-06-23",
-      "retrieved": "2026-09-01T13:23:27.986984+00:00",
-      "snippet": "Spire Global , Inc . ( NYSE : SPIR ) Receives $16 . 70 Average PT from Analysts",
-      "source_title": "dailypolitical.com — Spire Global , Inc . ( NYSE : SPIR ) Receives $16 . 70 Average PT from",
-      "source_url": "https://www.dailypolitical.com/2026/06/23/spire-global-inc-nysespir-receives-16-70-average-pt-from-analysts.html",
-      "text": "dailypolitical.com reported \"Spire Global , Inc . ( NYSE : SPIR ) Receives $16 . 70 Average PT from Analysts\" on 2026-06-23.",
-      "tier": "reported"
-    },
-    {
       "id": "d3f16fecc395",
       "published": "2025-09-10",
       "retrieved": "2026-09-01T13:22:50.498144+00:00",
@@ -114,6 +84,7 @@
       "topic": "relationship to us"
     }
   ],
+  "movement_note": null,
   "questions": [
     "Which office signs off, and who else has to agree before it does?",
     "How do you see the relationship between our organizations today?"
@@ -138,9 +109,6 @@
     ],
     "movement": [
       "c4aa9e8c6a07",
-      "6a5d3fc8f908",
-      "78aaf21a1f00",
-      "4a10f2b4fb84",
       "d3f16fecc395"
     ]
   }

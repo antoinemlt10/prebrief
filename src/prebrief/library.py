@@ -336,7 +336,7 @@ function renderDetail(){
     return `<section aria-label="${esc(s.title)}">
       <h2>${esc(s.title)}<span class="seccount">${ids.length}</span></h2>
       <p class="secnote">${esc(s.note)}</p>
-      ${cards || `<div class="empty">Nothing found in the window.</div>`}
+      ${cards || `<div class="empty">${esc(s.key === "movement" && b.movement_note ? b.movement_note : "Nothing found in the window.")}</div>`}
     </section>`;
   }).join("");
 

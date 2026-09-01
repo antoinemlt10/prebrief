@@ -110,6 +110,10 @@ class Brief:
     relationship_support: list[str] = field(default_factory=list)
     # Section 3: what moved
     movement: list[str] = field(default_factory=list)
+    # Set when the reader's domain filter emptied the section: says plainly
+    # that things moved, just not in our market. Never a fallback to
+    # unfiltered results.
+    movement_note: str | None = None
     # Section 5: claims that are stale, self-reported only, or contradicted
     check_first: list[str] = field(default_factory=list)
     # Sections 4 and 6 both come from here

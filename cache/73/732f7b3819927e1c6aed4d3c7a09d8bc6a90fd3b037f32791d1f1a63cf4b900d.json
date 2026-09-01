@@ -1,0 +1,7 @@
+{
+ "body": "The specified phrase is too short.\n",
+ "body_sha256": "08262311679bcb5d191f1374698909041dc4a026daea856e50f63c3ace0814b8",
+ "fetched_at": "2026-09-01T18:52:34.487731+00:00",
+ "status": 200,
+ "url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%22NOAA%22&mode=artlist&maxrecords=40&format=json&sort=datedesc&startdatetime=20250831000000&enddatetime=20260831235959"
+}

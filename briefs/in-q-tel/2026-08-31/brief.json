@@ -20,16 +20,6 @@
       "source_url": "https://www.wikidata.org/wiki/Q3109467",
       "text": "In-Q-Tel lists https://www.iqt.org/ as its official website.",
       "tier": "self-reported"
-    },
-    {
-      "id": "40489d95a82e",
-      "published": "2002-05-02",
-      "retrieved": "2026-09-01T13:23:29.386756+00:00",
-      "snippet": "cussion on universities and R&D technology issues, a presentation on the In-Q-Tel, a venture capital organization (tentative), an update on the ATP competition, and a presentation on a study on the ATP Computer Based Sof",
-      "source_title": "Federal Register — Advanced Technology Program Advisory Committee",
-      "source_url": "https://www.federalregister.gov/documents/2002/05/02/02-10955/advanced-technology-program-advisory-committee",
-      "text": "Commerce Department published a notice titled \"Advanced Technology Program Advisory Committee\" on 2002-05-02.",
-      "tier": "filed"
     }
   ],
   "entity": {
@@ -47,9 +37,36 @@
   "gaps": [
     {
       "searched": [
+        "federal register"
+      ],
+      "topic": "mandate"
+    },
+    {
+      "searched": [
         "usaspending"
       ],
       "topic": "budget"
+    },
+    {
+      "searched": [
+        "federal register"
+      ],
+      "topic": "timeline"
+    },
+    {
+      "searched": [
+        "federal register",
+        "usaspending"
+      ],
+      "topic": "procurement route"
+    },
+    {
+      "searched": [
+        "federal register",
+        "gdelt",
+        "usaspending"
+      ],
+      "topic": "recent activity"
     },
     {
       "searched": [],
@@ -60,10 +77,13 @@
       "topic": "relationship to us"
     }
   ],
+  "movement_note": null,
   "questions": [
+    "What is In-Q-Tel actually chartered to do, and what falls outside it?",
     "What budget line does this sit on, and for which fiscal year?",
-    "Which office signs off, and who else has to agree before it does?",
-    "How do you see the relationship between our organizations today?"
+    "What is the next date on your side that we should be working back from?",
+    "Through which vehicle would something like this actually get bought?",
+    "What has changed at In-Q-Tel in the last six months that is not public?"
   ],
   "relationship": {
     "inferred": true,
@@ -71,6 +91,7 @@
     "value": "undetermined"
   },
   "run_notes": [
+    "Everything federal register holds on In-Q-Tel is older than 8 years — dropped; a brief is not an archive.",
     "No federal contract in the 365 days to 2026-08-31 lists any of these as awarding agency or recipient: In-Q-Tel.",
     "No English-language headline names In-Q-Tel in the 365 days to 2026-08-31. Searched: In-Q-Tel."
   ],
@@ -78,8 +99,7 @@
     "check_first": [],
     "identity": [
       "3f08d4a9d608",
-      "781422405df2",
-      "40489d95a82e"
+      "781422405df2"
     ],
     "movement": []
   }

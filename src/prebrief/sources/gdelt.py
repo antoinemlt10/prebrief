@@ -37,6 +37,15 @@ _PERSONNEL = re.compile(
     re.IGNORECASE,
 )
 
+# Stock chatter. An analyst's price target is not something you would say out
+# loud walking into a meeting; the record that matters is the contract, the
+# filing, the award — never the ticker's day.
+_STOCK_CHATTER = re.compile(
+    r"(?:price\s+target|upgraded|downgraded|earnings\s+call\s+transcript|"
+    r"shares\s+of|stake\s+in|holdings\s+in|average\s+pt)",
+    re.IGNORECASE,
+)
+
 # Aggregators and syndication mills. They restate other people's reporting and
 # crowd out the primary account.
 _LOW_VALUE_DOMAINS = frozenset(
@@ -48,6 +57,8 @@ _LOW_VALUE_DOMAINS = frozenset(
         "stocktitan.net",
         "simplywall.st",
         "insidermonkey.com",
+        "dailypolitical.com",
+        "themarketsdaily.com",
     }
 )
 
@@ -91,6 +102,15 @@ class GdeltSource:
             try:
                 articles = response.json().get("articles") or []
             except ValueError:
+                if "too short" in response.body.casefold():
+                    # GDELT rejects a quoted phrase this short ("NOAA").
+                    # Permanent for this term, so the cached answer can stay —
+                    # it will never change. Move down the ladder.
+                    continue
+                # A transient notice page delivered as HTTP 200. Cached, it
+                # would replay the refusal forever — dropped, and reported as
+                # a refusal rather than an empty corpus.
+                ctx.cache.forget(self.url_for(term, ctx))
                 refused = response.status
                 continue
 
@@ -102,10 +122,15 @@ class GdeltSource:
         if refused is not None:
             # A refused query is not an empty corpus. Only the status code may
             # appear — never the response body, which the name tagger would read.
+            how = (
+                f"HTTP {refused}"
+                if refused != 200
+                else "a rate notice instead of results"
+            )
             return SourceResult(
                 self.name,
                 note=(
-                    f"GDELT refused this run's queries (HTTP {refused}); "
+                    f"GDELT refused this run's queries ({how}); "
                     f"its coverage is missing from this brief."
                 ),
             )
@@ -138,8 +163,10 @@ class GdeltSource:
             # entity, whatever the body says. Even on an exact-term hit.
             if not relevant(article.get("title", ""), entity):
                 continue
-            # Personnel news is never extracted — see _PERSONNEL above.
-            if _PERSONNEL.search(article.get("title", "")):
+            # Personnel news and stock chatter are never extracted — see the
+            # patterns above.
+            title = article.get("title", "")
+            if _PERSONNEL.search(title) or _STOCK_CHATTER.search(title):
                 continue
             if claim := self._to_claim(article, domain):
                 seen_domains.add(domain)

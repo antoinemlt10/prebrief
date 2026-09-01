@@ -21,6 +21,7 @@ from urllib.parse import quote
 import pytest
 
 from prebrief.cache import Cache, CacheMiss
+from prebrief.claims import Claim, Tier
 from prebrief.cli import _write
 from prebrief.entities import WIKIDATA_ENTITY, WIKIDATA_SEARCH
 from prebrief.pipeline import build
@@ -66,7 +67,9 @@ REGISTER = {
                 "acquire commercial data under an indefinite-delivery vehicle."
             ),
             "type": "Notice",
-            "agency_names": ["Example Department"],
+            # The Register lists the publishing chain: parent department first,
+            # then the sub-agency the document belongs to.
+            "agency_names": ["Example Department", "Example Procurement Program"],
         }
     ]
 }
@@ -314,17 +317,252 @@ def test_an_old_filed_record_is_background_not_suspect(seeded):
     cache, ctx = seeded
     old = Claim(
         text="Example Department awarded Northbridge Data Systems $1,000,000, "
-        "with a period beginning 2002-05-02.",
+        "with a period beginning 2020-05-02.",
         snippet="Northbridge Data Systems | Example Department | 1000000",
-        source_url="https://example.gov/award/2002",
-        source_title="USAspending award — EPP-2002-0001",
+        source_url="https://example.gov/award/2020",
+        source_title="USAspending award — EPP-2020-0001",
+        tier=Tier.FILED,
+        published=_date(2020, 5, 2),
+    )
+    brief = Brief(entity=resolve(ORG, cache), as_of=AS_OF, claims=ClaimSet([old]))
+    _fill_sections(brief, ctx, [], None)
+    assert old.id in brief.identity
+    assert brief.check_first == []
+
+
+def test_what_moved_answers_for_the_readers_market(seeded):
+    """The relevance gate tests relevance to the entity; the reader's domain
+    tests relevance to the meeting. A headline about the entity that touches
+    none of our market stays out of "What moved"."""
+    from prebrief.reader import Reader
+
+    _, ctx = seeded
+    reader = Reader(domain=("commercial data", "weather data"))
+    brief, _ = build(ORG, ctx, reader=reader)
+    moved = [brief.claims.get(cid).text for cid in brief.movement]
+    # The award's record says "commercial data profiles" — in the market.
+    assert any("Northbridge Data Systems" in t for t in moved)
+    # The headline says nothing about our market, however on-entity it is.
+    assert all("extends its data vehicle" not in t for t in moved)
+
+
+def test_an_emptied_movement_section_says_so(seeded):
+    """When the domain filter empties "What moved", the brief says which fact
+    happened — never a silent fallback to unfiltered results."""
+    from prebrief.reader import Reader
+
+    _, ctx = seeded
+    brief, _ = build(ORG, ctx, reader=Reader(domain=("orbital lasers",)))
+    assert brief.movement == []
+    assert brief.movement_note == "Nothing in the window touched orbital lasers."
+    markdown = render_markdown(brief)  # assert_sourced runs inside
+    assert "- Nothing in the window touched orbital lasers." in markdown
+
+
+def test_the_reader_domain_separates_the_agency_from_the_market():
+    """Real claims from the live NOAA and Spire briefs. All genuinely concern
+    the entities; only the market ones survive the reader filter."""
+    from prebrief.reader import Reader
+
+    reader = Reader(
+        domain=("commercial data", "weather data", "earth observation")
+    )
+    coral = Claim(
+        text='Commerce Department published a notice titled "The 52nd Meeting '
+        'of the U.S. Coral Reef Task Force" on 2026-08-19.',
+        snippet="The 52nd Meeting of the U.S. Coral Reef Task Force",
+        source_url="https://www.federalregister.gov/documents/2026/08/19/2026-16866/x",
+        source_title="Federal Register — The 52nd Meeting of the U.S. Coral Reef Task Force",
+        tier=Tier.FILED,
+    )
+    assert not reader.in_domain(coral)
+
+    award = Claim(
+        text="National Oceanic and Atmospheric Administration awarded Spire "
+        "Global Subsidiary, INC. $2,560,695, with a period beginning 2025-09-10.",
+        snippet="COMMERCIAL WEATHER DATA PILOT (CWDP) OCEAN SURFACE WINDS PILOT STUDY",
+        source_url="https://www.usaspending.gov/award/CONT_AWD_1332KP25P0040_1330_-NONE-_-NONE-",
+        source_title="USAspending award — 1332KP25P0040",
+        tier=Tier.FILED,
+    )
+    assert reader.in_domain(award)
+
+    eumetsat = Claim(
+        text='finanznachrichten.de reported "Spire Global , Inc .: EUMETSAT '
+        "Awards Spire Global €4 Million One - Year Contract Renewal and "
+        'Expansion for Satellite Weather Data" on 2026-08-25.',
+        snippet="Spire Global , Inc .: EUMETSAT Awards Spire Global €4 Million "
+        "One - Year Contract Renewal and Expansion for Satellite Weather Data",
+        source_url="https://www.finanznachrichten.de/x.htm",
+        source_title="finanznachrichten.de — EUMETSAT Awards Spire Global",
+        tier=Tier.REPORTED,
+    )
+    assert reader.in_domain(eumetsat)
+
+
+def test_a_government_brief_keeps_only_its_own_register_notices(seeded):
+    """The real Transportation Department notice reached NOAA's brief through
+    a NEPA consultation mention. For a government entity the publishing agency
+    must be the entity itself."""
+    cache, ctx = seeded
+    source = FederalRegisterSource()
+    body = {
+        "results": REGISTER["results"]
+        + [
+            {
+                "title": "Notice of Final Federal Agency Actions on Proposed "
+                "Project in Hawaii",
+                "publication_date": "2026-08-17",
+                "html_url": "https://example.gov/fr/dot-hawaii",
+                "abstract": "Actions taken in consultation with the Example "
+                "Procurement Program under NEPA.",
+                "type": "Notice",
+                "agency_names": ["Transportation Department",
+                                 "Federal Highway Administration"],
+            }
+        ]
+    }
+    cache.put(source.url_for(ORG, ctx), json.dumps(body))
+
+    from prebrief.entities import resolve
+
+    result = source.collect(resolve(ORG, cache), ctx)
+    titles = [c.source_title for c in result.claims]
+    assert any("Notice of Intent To Procure" in t for t in titles)
+    assert not any("Hawaii" in t for t in titles)
+
+
+def test_records_older_than_eight_years_are_dropped_with_a_note(seeded):
+    """The real 2002 notice names In-Q-Tel in its abstract, so relevance
+    rightly passes it — the missing rule was an absolute date floor. Undated
+    identity claims must survive: the floor keys on `published`."""
+    from datetime import date as _date
+
+    from prebrief.pipeline import _drop_ancient
+    from prebrief.sources.base import SourceResult
+
+    ancient = Claim(
+        text='Commerce Department published a notice titled "Advanced '
+        'Technology Program Advisory Committee" on 2002-05-02.',
+        snippet="a presentation on the In-Q-Tel, a venture capital organization",
+        source_url="https://www.federalregister.gov/documents/2002/05/02/02-10955/x",
+        source_title="Federal Register — Advanced Technology Program Advisory Committee",
         tier=Tier.FILED,
         published=_date(2002, 5, 2),
     )
-    brief = Brief(entity=resolve(ORG, cache), as_of=AS_OF, claims=ClaimSet([old]))
-    _fill_sections(brief, ctx, [])
-    assert old.id in brief.identity
-    assert brief.check_first == []
+    undated = Claim(
+        text='Wikidata describes In-Q-Tel as "American defense industry '
+        'venture capital firm".',
+        snippet="American defense industry venture capital firm",
+        source_url="https://www.wikidata.org/wiki/Q3109467",
+        source_title="Wikidata — In-Q-Tel (Q3109467)",
+        tier=Tier.SELF,
+    )
+    register = SourceResult("federal register", claims=[ancient])
+    wikidata = SourceResult("wikidata", claims=[undated])
+
+    from prebrief.entities import resolve
+
+    _drop_ancient([register, wikidata], resolve(ORG, seeded[0]), AS_OF)
+    assert register.claims == []
+    assert register.note and "older" in register.note
+    assert wikidata.claims == [undated]
+
+
+def test_stock_chatter_is_never_extracted(seeded):
+    """Real headlines from the live Spire brief. An analyst's price target is
+    not something you would say out loud walking into a meeting; the EUMETSAT
+    renewal is."""
+    from prebrief.entities import Entity, slugify
+
+    name = "Spire Global"
+    spire = Entity(name=name, slug=slugify(name))
+    articles = [
+        {
+            "title": "Spire Global ( NYSE : SPIR ) Upgraded at Wall Street Zen",
+            "url": "https://www.themarketsdaily.com/x.html",
+            "seendate": "20260818T120000Z",
+            "domain": "themarketsdaily.com",
+            "language": "English",
+        },
+        {
+            "title": "Spire Global ( SPIR ) Q2 2026 Earnings Call Transcript",
+            "url": "https://www.fool.com/x/",
+            "seendate": "20260819T120000Z",
+            "domain": "fool.com",
+            "language": "English",
+        },
+        {
+            "title": "Spire Global , Inc .: EUMETSAT Awards Spire Global €4 "
+            "Million One - Year Contract Renewal and Expansion for Satellite "
+            "Weather Data",
+            "url": "https://www.finanznachrichten.de/x.htm",
+            "seendate": "20260825T120000Z",
+            "domain": "finanznachrichten.de",
+            "language": "English",
+        },
+    ]
+    claims = GdeltSource()._select(articles, spire, name)
+    assert len(claims) == 1
+    assert "EUMETSAT" in claims[0].text
+
+
+def test_the_ladder_learns_the_initialism():
+    """GDELT only ever searched the full official phrase, which no headline
+    uses — the derived initialism joins the ladder, widest match last. Names
+    already carrying an acronym token must not grow junk terms."""
+    from prebrief.entities import Entity, slugify
+
+    noaa = Entity(
+        name="National Oceanic and Atmospheric Administration",
+        slug=slugify("National Oceanic and Atmospheric Administration"),
+    )
+    assert noaa.query_terms()[-1] == "NOAA"
+    cdp = Entity(
+        name="NOAA NESDIS Commercial Data Program",
+        slug=slugify("NOAA NESDIS Commercial Data Program"),
+    )
+    assert "NNCDP" not in cdp.query_terms()
+
+
+def test_a_too_short_phrase_rejection_walks_down_the_ladder(seeded):
+    """GDELT rejects the quoted phrase "NOAA" as too short — with HTTP 200.
+    That is a permanent per-term answer, not a refusal: the term is skipped
+    and the honest no-headline note survives, with no HTTP 200 nonsense."""
+    from prebrief.entities import Entity, slugify
+
+    cache, ctx = seeded
+    name = "National Oceanic and Atmospheric Administration"
+    entity = Entity(name=name, slug=slugify(name))
+    source = GdeltSource()
+    cache.put(source.url_for(name, ctx), json.dumps({"articles": []}))
+    cache.put(source.url_for("NOAA", ctx), "The specified phrase is too short. ")
+
+    result = source.collect(entity, ctx)
+    assert not result.ok
+    assert "No English-language headline" in result.note
+    assert "refused" not in result.note
+
+
+def test_a_rate_notice_delivered_as_200_is_not_cached(seeded):
+    """GDELT's rate-limit page arrives as HTTP 200. Cached, it would replay
+    the refusal forever — it is evicted, and reported as a refusal, never as
+    an empty corpus and never as "HTTP 200"."""
+    cache, ctx = seeded
+    source = GdeltSource()
+
+    from prebrief.entities import resolve
+
+    entity = resolve(ORG, cache)
+    notice = "Please limit requests to one every 5 seconds or contact us."
+    for term in entity.query_terms():
+        cache.put(source.url_for(term, ctx), notice)
+
+    result = source.collect(entity, ctx)
+    assert not result.ok
+    assert "refused" in result.note and "HTTP 200" not in result.note
+    first = source.url_for(entity.query_terms()[0], ctx)
+    assert not cache.path_for(first).exists(), "the notice must not persist"
 
 
 def test_a_rate_limited_gdelt_is_reported_as_refused_not_empty(seeded):

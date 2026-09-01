@@ -75,7 +75,9 @@ def render_markdown(brief: Brief) -> str:
     out.append("")
 
     out.append("## What moved")
-    out.extend(_claim_lines(brief.movement, claims) or ["- Nothing found in the window."])
+    out.extend(
+        _claim_lines(brief.movement, claims) or [f"- {_empty_movement_line(brief)}"]
+    )
     out.append("")
 
     if questions := brief.questions:
@@ -112,6 +114,12 @@ CHROME_PROVENANCE = (
     "from a statutory record; `reported` from press; `self-reported` from the "
     "organization itself.*"
 )
+
+
+def _empty_movement_line(brief: Brief) -> str:
+    """The reader-domain filter emptying the section is a different fact from
+    the window being empty, and the brief says which one happened."""
+    return brief.movement_note or "Nothing found in the window."
 
 
 def _header_line(brief: Brief) -> str:
@@ -163,7 +171,7 @@ def assert_sourced(markdown: str, brief: Brief) -> None:
     relationship = f"- {brief.relationship.sentence(brief.entity.name)}"
     header = _header_line(brief)
     title = f"# {brief.entity.name}"
-    empty_movement = "- Nothing found in the window."
+    empty_movement = f"- {_empty_movement_line(brief)}"
 
     for lineno, line in enumerate(markdown.splitlines(), 1):
         stripped = line.rstrip()
@@ -213,6 +221,7 @@ def render_json(brief: Brief) -> str:
             "movement": brief.movement,
             "check_first": brief.check_first,
         },
+        "movement_note": brief.movement_note,
         "questions": brief.questions,
         "gaps": [
             {"topic": g.topic.value, "searched": list(g.searched)} for g in brief.gaps
