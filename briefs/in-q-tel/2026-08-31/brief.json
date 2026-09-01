@@ -2,24 +2,24 @@
   "as_of": "2026-08-31",
   "claims": [
     {
-      "id": "0e46f571aa0d",
-      "published": "2025-03-17",
-      "retrieved": "2026-09-01T13:23:29.386756+00:00",
-      "snippet": "In this document, the Federal Communications Commission (FCC or Commission) proposes and seeks comment on changes to the rules that govern the operations of three distinct bands of spectrum, modernizing rules to facilita",
-      "source_title": "Federal Register — Facilitating Opportunities for Advanced Air Mobility",
-      "source_url": "https://www.federalregister.gov/documents/2025/03/17/2025-03602/facilitating-opportunities-for-advanced-air-mobility",
-      "text": "Federal Communications Commission published a proposed rule titled \"Facilitating Opportunities for Advanced Air Mobility\" on 2025-03-17.",
-      "tier": "filed"
+      "id": "3f08d4a9d608",
+      "published": null,
+      "retrieved": "2026-09-01T13:23:28.971763+00:00",
+      "snippet": "American defense industry venture capital firm",
+      "source_title": "Wikidata — In-Q-Tel (Q3109467)",
+      "source_url": "https://www.wikidata.org/wiki/Q3109467",
+      "text": "Wikidata describes In-Q-Tel as \"American defense industry venture capital firm\".",
+      "tier": "self-reported"
     },
     {
-      "id": "d3873b636810",
-      "published": "2024-09-04",
-      "retrieved": "2026-09-01T13:23:29.386756+00:00",
-      "snippet": "The National Telecommunications and Information Administration (NTIA) hereby requests comments on the challenges surrounding data center growth, resilience and security in the United States amidst a surge of computing po",
-      "source_title": "Federal Register — Request for Comments on Bolstering Data Center Growth, Resilience, and",
-      "source_url": "https://www.federalregister.gov/documents/2024/09/04/2024-19524/request-for-comments-on-bolstering-data-center-growth-resilience-and-security",
-      "text": "Commerce Department published a notice titled \"Request for Comments on Bolstering Data Center Growth, Resilience, and Security\" on 2024-09-04.",
-      "tier": "filed"
+      "id": "781422405df2",
+      "published": null,
+      "retrieved": "2026-09-01T13:23:28.971763+00:00",
+      "snippet": "https://www.iqt.org/",
+      "source_title": "Wikidata — In-Q-Tel (Q3109467)",
+      "source_url": "https://www.wikidata.org/wiki/Q3109467",
+      "text": "In-Q-Tel lists https://www.iqt.org/ as its official website.",
+      "tier": "self-reported"
     },
     {
       "id": "40489d95a82e",
@@ -75,12 +75,11 @@
     "No English-language headline names In-Q-Tel in the 365 days to 2026-08-31. Searched: In-Q-Tel."
   ],
   "sections": {
-    "check_first": [
-      "40489d95a82e"
-    ],
+    "check_first": [],
     "identity": [
-      "0e46f571aa0d",
-      "d3873b636810"
+      "3f08d4a9d608",
+      "781422405df2",
+      "40489d95a82e"
     ],
     "movement": []
   }

@@ -291,24 +291,58 @@ def test_a_widened_match_must_still_be_about_the_entity():
         "Braintree Statistics By Country And Facts ( 2026 )",
     ]
     for headline in noise:
-        assert not relevant(headline, cdp, "NOAA NESDIS"), headline
+        assert not relevant(headline, cdp), headline
 
 
 def test_a_widened_match_keeps_a_document_that_is_on_topic():
     cdp = _entity("NOAA NESDIS Commercial Data Program")
+    assert relevant("NESDIS Commercial Data Program announces contract awards", cdp)
     assert relevant(
-        "NESDIS Commercial Data Program announces contract awards", cdp, "NOAA NESDIS"
-    )
-    assert relevant(
-        "The agency will procure commercial data under an existing vehicle.",
-        cdp,
-        "NOAA NESDIS",
+        "The agency will procure commercial data under an existing vehicle.", cdp
     )
 
 
-def test_an_exact_match_needs_no_relevance_test():
+def test_an_exact_term_match_is_not_trusted_blindly():
+    """The Federal Register searches full text, so a document that mentions an
+    organization once among three hundred licensees comes back as a match.
+    Every title below is a real one that reached a brief this way. None is
+    about the organization it was filed under."""
     spire = _entity("Spire Global")
-    assert relevant("Something entirely unrelated", spire, "Spire Global")
+    assert not relevant(
+        "Review of the Commission's Assessment and Collection of Regulatory "
+        "Fees for Fiscal Year 2025",
+        spire,
+    )
+    iqt = _entity("In-Q-Tel")
+    assert not relevant("Facilitating Opportunities for Advanced Air Mobility", iqt)
+    assert not relevant("Advanced Technology Program Advisory Committee", iqt)
+
+
+def test_the_derived_initialism_keeps_the_agency_notices():
+    """Requiring the full name would silence every Federal Register notice
+    that says NOAA — the fix for full-text noise must not blind the test to
+    how documents actually name an agency."""
+    noaa = _entity("National Oceanic and Atmospheric Administration")
+    assert noaa.initialism() == "NOAA"
+    assert relevant(
+        "Solicitation of Nominations for Membership on the NOAA Science "
+        "Advisory Board",
+        noaa,
+    )
+    # Two-word names must not shrink to a two-letter net that catches everything.
+    assert _entity("Spire Global").initialism() is None
+
+
+def test_a_document_naming_the_entity_in_its_abstract_qualifies():
+    """The 2002 committee notice names In-Q-Tel in its abstract — hyphens and
+    a source's spacing quirks must not hide the name."""
+    iqt = _entity("In-Q-Tel")
+    assert relevant(
+        "Advanced Technology Program Advisory Committee — a presentation on "
+        "the In-Q-Tel, a venture capital organization",
+        iqt,
+    )
+    assert relevant("A presentation on the In - Q - Tel venture model", iqt)
 
 
 # ---------------------------------------------------------------- shouted names

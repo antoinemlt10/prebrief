@@ -69,9 +69,9 @@ class FederalRegisterSource:
             seen: set[tuple[str, str]] = set()
             on_topic = []
             for d in documents:
-                if not relevant(
-                    f"{d.get('title', '')} {d.get('abstract') or ''}", entity, term
-                ):
+                # Title plus abstract only — the Register matched the body, and
+                # a body mention proves nothing about what the document is about.
+                if not relevant(f"{d.get('title', '')} {d.get('abstract') or ''}", entity):
                     continue
                 key = (clean(d.get("title", "")), d.get("publication_date") or "")
                 if key in seen:

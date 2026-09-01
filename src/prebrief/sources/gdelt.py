@@ -16,7 +16,7 @@ from urllib.parse import urlencode
 
 from ..claims import Claim, Tier
 from ..entities import Entity
-from .base import RunContext, SourceResult, clean, stamped, unreachable
+from .base import RunContext, SourceResult, clean, relevant, stamped, unreachable
 
 API = "https://api.gdeltproject.org/api/v2/doc/doc"
 MAX_ARTICLES = 6
@@ -136,7 +136,7 @@ class GdeltSource:
             # census piece that mentions NOAA in paragraph nine, a funding
             # roundup that lists the fund once — is not a statement about the
             # entity, whatever the body says. Even on an exact-term hit.
-            if not self._headline_names(article.get("title", ""), entity):
+            if not relevant(article.get("title", ""), entity):
                 continue
             # Personnel news is never extracted — see _PERSONNEL above.
             if _PERSONNEL.search(article.get("title", "")):
@@ -145,21 +145,6 @@ class GdeltSource:
                 seen_domains.add(domain)
                 claims.append(claim)
         return claims
-
-    @staticmethod
-    def _headline_names(title: str, entity: Entity) -> bool:
-        haystack = clean(title).casefold()
-        if entity.name.casefold() in haystack:
-            return True
-        if any(bigram in haystack for bigram in entity.name_bigrams()):
-            return True
-        # Headlines say "NOAA", not the seven-word official name. An alias only
-        # counts as a whole word — "SAB" inside "disabled" is not a mention.
-        return any(
-            len(alias) >= 3
-            and re.search(rf"\b{re.escape(alias.casefold())}\b", haystack)
-            for alias in entity.aliases
-        )
 
     def _to_claim(self, article: dict, domain: str) -> Claim | None:
         title = clean(article.get("title", ""))

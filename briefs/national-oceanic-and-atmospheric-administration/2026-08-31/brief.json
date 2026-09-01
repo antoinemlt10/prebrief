@@ -2,6 +2,26 @@
   "as_of": "2026-08-31",
   "claims": [
     {
+      "id": "093db9625c02",
+      "published": null,
+      "retrieved": "2026-09-01T13:21:36.900811+00:00",
+      "snippet": "agency in the United States Federal Government",
+      "source_title": "Wikidata — National Oceanic and Atmospheric Administration (Q214700)",
+      "source_url": "https://www.wikidata.org/wiki/Q214700",
+      "text": "Wikidata describes National Oceanic and Atmospheric Administration as \"agency in the United States Federal Government\".",
+      "tier": "self-reported"
+    },
+    {
+      "id": "c577847cdd55",
+      "published": null,
+      "retrieved": "2026-09-01T13:21:36.900811+00:00",
+      "snippet": "https://www.noaa.gov/",
+      "source_title": "Wikidata — National Oceanic and Atmospheric Administration (Q214700)",
+      "source_url": "https://www.wikidata.org/wiki/Q214700",
+      "text": "National Oceanic and Atmospheric Administration lists https://www.noaa.gov/ as its official website.",
+      "tier": "self-reported"
+    },
+    {
       "id": "0973efce2d88",
       "published": "2025-03-01",
       "retrieved": "2026-09-01T13:21:38.097238+00:00",
@@ -9,16 +29,6 @@
       "source_title": "USAspending award — 1305M425F0034",
       "source_url": "https://www.usaspending.gov/award/CONT_AWD_1305M425F0034_1330_1305L419ANAAJ0008_1330",
       "text": "National Oceanic and Atmospheric Administration awarded Science Applications International Corporation $9,695,083, with a period beginning 2025-03-01.",
-      "tier": "filed"
-    },
-    {
-      "id": "33a63d1f3982",
-      "published": "2024-09-01",
-      "retrieved": "2026-09-01T13:21:38.097238+00:00",
-      "snippet": "IGF CT IGF-OPERATIONS AND MAINTENANCE (O&M) O&M IT SECURITY SUPPORT PRODUCT IMPROVEMENT AND COMMUNICATIONS SERVICES FOR THE NATIONAL OCEANIC AND ATMOSPHERIC ADMINISTRATIONS (NOAAS) NATIONAL WEATHER SERVICE (NWS) ADVANCED WEATHER INTERACTIVE P",
-      "source_title": "USAspending award — 1305M224F0244",
-      "source_url": "https://www.usaspending.gov/award/CONT_AWD_1305M224F0244_1330_DOCEA133W17CQ0082_1330",
-      "text": "National Oceanic and Atmospheric Administration awarded Raytheon Company $19,287,831, with a period beginning 2024-09-01.",
       "tier": "filed"
     },
     {
@@ -52,16 +62,6 @@
       "tier": "filed"
     },
     {
-      "id": "56364feea6c3",
-      "published": "2026-08-19",
-      "retrieved": "2026-09-01T13:21:37.363509+00:00",
-      "snippet": "This notice sets forth the schedule and proposed agenda of a forthcoming meeting of the National Sea Grant Advisory Board (Board), a Federal Advisory Committee. Board members will discuss and provide advice on the Nation",
-      "source_title": "Federal Register — Public Meeting of the National Sea Grant Advisory Board",
-      "source_url": "https://www.federalregister.gov/documents/2026/08/19/2026-16886/public-meeting-of-the-national-sea-grant-advisory-board",
-      "text": "Commerce Department published a notice titled \"Public Meeting of the National Sea Grant Advisory Board\" on 2026-08-19.",
-      "tier": "filed"
-    },
-    {
       "id": "70c347501a4e",
       "published": "2026-08-19",
       "retrieved": "2026-09-01T13:21:37.363509+00:00",
@@ -92,13 +92,13 @@
       "tier": "filed"
     },
     {
-      "id": "b3a277cda132",
-      "published": "2024-06-12",
-      "retrieved": "2026-09-01T13:21:38.097238+00:00",
-      "snippet": "THE NATIONAL OCEANIC AND ATMOSPHERIC ADMINISTRATION (NOAA), NATIONAL WEATHER SERVICE (NWS), NATIONAL CENTERS FOR ENVIRONMENTAL PREDICTION (NCEP), CENTRAL OPERATIONS (NCO) REQUIRES DATA CENTER SUPPORT SERVICES TO (1) PROVIDE OPERATIONS AND MAINTENANCE",
-      "source_title": "USAspending award — 1305M324F0047",
-      "source_url": "https://www.usaspending.gov/award/CONT_AWD_1305M324F0047_1330_47QTCK18D0014_4732",
-      "text": "National Oceanic and Atmospheric Administration awarded International Business Machines Corporation $27,824,253, with a period beginning 2024-06-12.",
+      "id": "eac2118c9194",
+      "published": "2026-08-17",
+      "retrieved": "2026-09-01T13:21:37.363509+00:00",
+      "snippet": "unces actions taken by FHWA, U.S. Fish and Wildlife Service (USFWS), and National Oceanic and Atmospheric Administration, National Marine Fisheries Service (NMFS) that are final. The actions relate to a proposed bridge p",
+      "source_title": "Federal Register — Notice of Final Federal Agency Actions on Proposed Project in Hawaii",
+      "source_url": "https://www.federalregister.gov/documents/2026/08/17/2026-16719/notice-of-final-federal-agency-actions-on-proposed-project-in-hawaii",
+      "text": "Transportation Department published a notice titled \"Notice of Final Federal Agency Actions on Proposed Project in Hawaii\" on 2026-08-17.",
       "tier": "filed"
     }
   ],
@@ -140,20 +140,18 @@
     "No English-language headline names National Oceanic and Atmospheric Administration in the 365 days to 2026-08-31. Searched: National Oceanic and Atmospheric Administration."
   ],
   "sections": {
-    "check_first": [
-      "b3a277cda132",
-      "fdb751f2f248"
-    ],
+    "check_first": [],
     "identity": [
-      "0973efce2d88",
-      "33a63d1f3982"
+      "093db9625c02",
+      "c577847cdd55",
+      "0973efce2d88"
     ],
     "movement": [
       "2624b440323e",
-      "56364feea6c3",
       "70c347501a4e",
       "ecc1df00c617",
-      "a8b6e592f214"
+      "a8b6e592f214",
+      "eac2118c9194"
     ]
   }
 }

@@ -62,11 +62,19 @@ def main(argv: list[str] | None = None) -> int:
     doctor.add_argument("--window-days", type=int, default=365)
     doctor.add_argument("--cache", type=Path, default=DEFAULT_CACHE)
 
+    library = sub.add_parser(
+        "library", help="one page indexing every brief in the briefs directory"
+    )
+    library.add_argument("--briefs", type=Path, default=DEFAULT_OUT)
+    library.add_argument("--out", type=Path, default=None)
+
     args = parser.parse_args(argv)
     if args.command == "run":
         return _run(args)
     if args.command == "doctor":
         return _doctor(args)
+    if args.command == "library":
+        return _library(args)
     return _verify(args)
 
 
@@ -93,7 +101,10 @@ def _doctor(args) -> int:
 
     for source in default_sources():
         print(f"\n  [{source.name}]")
-        for term in ladder:
+        # A source without a per-term URL (wikidata reads what resolution
+        # already fetched) shows only its verdict.
+        queryable = isinstance(source, USASpendingSource) or hasattr(source, "url_for")
+        for term in ladder if queryable else []:
             try:
                 if isinstance(source, USASpendingSource):
                     payload = source.payload_for(
@@ -188,6 +199,28 @@ def _write(brief: Brief, root: Path) -> Path:
     (directory / "brief.json").write_text(render_json(brief), encoding="utf-8")
     (directory / "sources.csv").write_text(render_sources_csv(brief), encoding="utf-8")
     return directory / "brief.md"
+
+
+def _library(args) -> int:
+    """Generate the library page from the briefs on disk. Generated, never
+    hand-maintained — a hand-edited page becomes a lie about the repository
+    the moment anyone re-runs the tool."""
+    import json
+
+    from .library import render_library
+
+    payloads = []
+    for path in sorted(args.briefs.glob("*/*/brief.json")):
+        payloads.append(json.loads(path.read_text(encoding="utf-8")))
+    if not payloads:
+        print(f"no brief.json under {args.briefs}; run `prebrief run` first",
+              file=sys.stderr)
+        return 2
+
+    out = args.out or args.briefs / "index.html"
+    out.write_text(render_library(payloads), encoding="utf-8")
+    print(f"✓ {out}  ({len(payloads)} briefs)")
+    return 0
 
 
 def _verify(args) -> int:

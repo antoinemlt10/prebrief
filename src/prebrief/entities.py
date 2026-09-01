@@ -85,6 +85,21 @@ class Entity:
         not a failure."""
         return self.qid is None and self.cik is None
 
+    def initialism(self) -> str | None:
+        """The initialism a document would actually use, derived from the name.
+
+        First letters of the significant words — stopwords skipped, so
+        "National Oceanic and Atmospheric Administration" gives NOAA, not
+        NOAAA. Three letters minimum: "Spire Global" must not become "SG"
+        and start matching everything.
+        """
+        stop = {"and", "of", "the", "for", "in", "on", "at", "to", "a", "an"}
+        words = [w for w in re.split(r"[\s\-]+", self.name) if w]
+        letters = "".join(
+            w[0].upper() for w in words if w.casefold() not in stop and w[0].isalpha()
+        )
+        return letters if len(letters) >= 3 else None
+
     def name_bigrams(self) -> list[str]:
         """Adjacent word pairs from the name, lowercased.
 

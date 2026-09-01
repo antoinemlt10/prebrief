@@ -11,16 +11,15 @@ long "could not find" list are correct outputs, not failures.
 
 from __future__ import annotations
 
-from datetime import date
-
 from .brief import Brief, Gap, GapTopic, MAX_CLAIMS, Relationship
-from .claims import Claim, ClaimSet, Tier
+from .claims import ClaimSet, Tier
 from .entities import Entity, Kind, resolve
 from .scope import ScopeGate
 from .sources.base import RunContext, Source, SourceResult
 from .sources.federal_register import FederalRegisterSource
 from .sources.gdelt import GdeltSource
 from .sources.usaspending import USASpendingSource
+from .sources.wikidata import WikidataSource
 
 __all__ = ["default_sources", "build"]
 
@@ -30,11 +29,14 @@ IDENTITY_MAX = 3
 MOVEMENT_MAX = 5
 CHECK_MAX = 2
 
-STALE_YEARS = 2
-
 
 def default_sources() -> list[Source]:
-    return [FederalRegisterSource(), USASpendingSource(), GdeltSource()]
+    return [
+        WikidataSource(),
+        FederalRegisterSource(),
+        USASpendingSource(),
+        GdeltSource(),
+    ]
 
 
 def build(
@@ -53,7 +55,13 @@ def build(
     claims = scoped.kept.as_of(ctx.as_of)
 
     brief = Brief(entity=entity, as_of=ctx.as_of, claims=claims)
-    _fill_sections(brief, ctx)
+    # Identity claims from entity resolution lead "Who they are" — what the
+    # organization is comes before what it has bought or filed.
+    pinned = [
+        c.id for r in results if r.source == "wikidata" for c in r.claims
+        if c.id in claims
+    ]
+    _fill_sections(brief, ctx, pinned)
     brief.relationship, brief.relationship_support = _infer_relationship(brief, results)
     brief.gaps = _find_gaps(sources, results)
     brief.run_notes = _notes(entity, results, scoped)
@@ -62,23 +70,31 @@ def build(
     return brief, results
 
 
-def _fill_sections(brief: Brief, ctx: RunContext) -> None:
+def _fill_sections(brief: Brief, ctx: RunContext, pinned: list[str]) -> None:
+    """`pinned` leads the identity section: claims about what the organization
+    is, from entity resolution.
+
+    check_first is reserved for what is genuinely questionable — self-reported
+    claims outside the pinned identity. A filed record does not become doubtful
+    with age; a dated award from a statutory record is background, and
+    background is what the identity section is for. When nothing structural
+    exists, the section stays empty rather than borrowing leftovers.
+    """
     window_start = ctx.window_start
-    stale_before = date(ctx.as_of.year - STALE_YEARS, ctx.as_of.month, ctx.as_of.day)
+    pinset = set(pinned)
 
     recent, background, suspect = [], [], []
     for claim in brief.claims:  # already sorted newest-first, best-tier-first
-        if claim.tier is Tier.SELF or (claim.published and claim.published < stale_before):
+        if claim.id in pinset:
+            continue
+        if claim.tier is Tier.SELF:
             suspect.append(claim)
         elif claim.published and claim.published >= window_start:
             recent.append(claim)
         else:
             background.append(claim)
 
-    # Structural facts first; if nothing is structural, borrow the oldest recent
-    # ones rather than leaving the section empty.
-    identity_pool = background or list(reversed(recent))
-    brief.identity = [c.id for c in identity_pool[:IDENTITY_MAX]]
+    brief.identity = (pinned + [c.id for c in background])[:IDENTITY_MAX]
 
     used = set(brief.identity)
     brief.movement = [c.id for c in recent if c.id not in used][:MOVEMENT_MAX]

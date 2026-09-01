@@ -2,24 +2,24 @@
   "as_of": "2026-08-31",
   "claims": [
     {
-      "id": "8372c85fd027",
-      "published": "2025-06-16",
-      "retrieved": "2026-09-01T13:22:49.725969+00:00",
-      "snippet": "In this document, the Federal Communications Commission (Commission) seeks comment on revising the fee schedule of FY 2025 regulatory fees and on several additional regulatory fee issues, as described in the text below.",
-      "source_title": "Federal Register — Review of the Commission's Assessment and Collection of Regulatory Fee",
-      "source_url": "https://www.federalregister.gov/documents/2025/06/16/2025-11073/review-of-the-commissions-assessment-and-collection-of-regulatory-fees-for-fiscal-year-2025",
-      "text": "Federal Communications Commission published a proposed rule titled \"Review of the Commission's Assessment and Collection of Regulatory Fees for Fiscal Year 2025\" on 2025-06-16.",
-      "tier": "filed"
+      "id": "80b9c92a94c8",
+      "published": null,
+      "retrieved": "2026-09-01T13:22:49.383817+00:00",
+      "snippet": "space-to-cloud data and analytics company",
+      "source_title": "Wikidata — Spire Global (Q19877982)",
+      "source_url": "https://www.wikidata.org/wiki/Q19877982",
+      "text": "Wikidata describes Spire Global as \"space-to-cloud data and analytics company\".",
+      "tier": "self-reported"
     },
     {
-      "id": "e30deba45f00",
-      "published": "2024-09-25",
-      "retrieved": "2026-09-01T13:22:49.725969+00:00",
-      "snippet": "In this document, the Commission revises its Schedule of Regulatory Fees to recover $390,192,000 that Congress has required the Commission to collect for its fiscal year (FY) 2024. Sections 9 and 9A of the Communications",
-      "source_title": "Federal Register — Review of the Commission's Assessment and Collection of Regulatory Fee",
-      "source_url": "https://www.federalregister.gov/documents/2024/09/25/2024-21159/review-of-the-commissions-assessment-and-collection-of-regulatory-fees-for-fiscal-year-2024",
-      "text": "Federal Communications Commission published a rule titled \"Review of the Commission's Assessment and Collection of Regulatory Fees for Fiscal Year 2024; Assessment and Collection of Space and Earth Station Regulatory Fees for Fiscal Year 2024, Second Report and Order\" on 2024-09-25.",
-      "tier": "filed"
+      "id": "3e9a316e826d",
+      "published": null,
+      "retrieved": "2026-09-01T13:22:49.383817+00:00",
+      "snippet": "http://spire.com",
+      "source_title": "Wikidata — Spire Global (Q19877982)",
+      "source_url": "https://www.wikidata.org/wiki/Q19877982",
+      "text": "Spire Global lists http://spire.com as its official website.",
+      "tier": "self-reported"
     },
     {
       "id": "266c2cc8e525",
@@ -82,23 +82,13 @@
       "tier": "reported"
     },
     {
-      "id": "3f4361d24be5",
-      "published": "2026-05-08",
-      "retrieved": "2026-09-01T13:22:49.725969+00:00",
-      "snippet": "In this document, the Federal Communications Commission (Commission) seeks comment on revising the fee schedule of FY 2026 regulatory fees and on several additional regulatory fee issues, as described in the text below.",
-      "source_title": "Federal Register — Review of the Commission's Assessment and Collection of Regulatory Fee",
-      "source_url": "https://www.federalregister.gov/documents/2026/05/08/2026-09193/review-of-the-commissions-assessment-and-collection-of-regulatory-fees-for-fiscal-year-2026",
-      "text": "Federal Communications Commission published a proposed rule titled \"Review of the Commission's Assessment and Collection of Regulatory Fees for Fiscal Year 2026\" on 2026-05-08.",
-      "tier": "filed"
-    },
-    {
-      "id": "4362c6cb8903",
-      "published": "2024-06-25",
-      "retrieved": "2026-09-01T13:22:49.725969+00:00",
-      "snippet": "In this document, the Federal Communications Commission (Commission) seeks comment on revising the fee schedule of FY 2024 regulatory fees and on several additional regulatory fee issues, as described in the text below.",
-      "source_title": "Federal Register — Review of the Commission's Assessment and Collection of Regulatory Fee",
-      "source_url": "https://www.federalregister.gov/documents/2024/06/25/2024-13813/review-of-the-commissions-assessment-and-collection-of-regulatory-fees-for-fiscal-year-2024",
-      "text": "Federal Communications Commission published a proposed rule titled \"Review of the Commission's Assessment and Collection of Regulatory Fees for Fiscal Year 2024\" on 2024-06-25.",
+      "id": "d3f16fecc395",
+      "published": "2025-09-10",
+      "retrieved": "2026-09-01T13:22:50.498144+00:00",
+      "snippet": "COMMERCIAL WEATHER DATA PILOT (CWDP) OCEAN SURFACE WINDS PILOT STUDY",
+      "source_title": "USAspending award — 1332KP25P0040",
+      "source_url": "https://www.usaspending.gov/award/CONT_AWD_1332KP25P0040_1330_-NONE-_-NONE-",
+      "text": "National Oceanic and Atmospheric Administration awarded Spire Global Subsidiary, INC. $2,560,695, with a period beginning 2025-09-10.",
       "tier": "filed"
     }
   ],
@@ -140,20 +130,18 @@
     "2 claim(s) about atmospheric data or forecast quality were excluded — out of scope for this brief."
   ],
   "sections": {
-    "check_first": [
-      "266c2cc8e525",
-      "4362c6cb8903"
-    ],
+    "check_first": [],
     "identity": [
-      "8372c85fd027",
-      "e30deba45f00"
+      "80b9c92a94c8",
+      "3e9a316e826d",
+      "266c2cc8e525"
     ],
     "movement": [
       "c4aa9e8c6a07",
       "6a5d3fc8f908",
       "78aaf21a1f00",
       "4a10f2b4fb84",
-      "3f4361d24be5"
+      "d3f16fecc395"
     ]
   }
 }

@@ -24,12 +24,15 @@ test:
 
 # Regenerates from cache where it exists. Use `make fresh` after changing how a
 # source builds its query, or the old failed responses will be replayed.
+# The library page is regenerated with the briefs so it can never go stale.
 briefs:
 	$(BIN) run --batch examples/orgs.txt --as-of $(AS_OF)
+	$(BIN) library
 
 fresh:
 	rm -rf cache briefs
 	$(BIN) run --batch examples/orgs.txt --as-of $(AS_OF)
+	$(BIN) library
 
 doctor:
 	$(BIN) doctor "$(ORG)" --as-of $(AS_OF)

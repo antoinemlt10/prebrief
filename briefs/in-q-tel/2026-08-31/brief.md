@@ -3,8 +3,9 @@
 As of 2026-08-31 · nonprofit · 3 sourced statements
 
 ## Who they are
-- Federal Communications Commission published a proposed rule titled "Facilitating Opportunities for Advanced Air Mobility" on 2025-03-17. [^0e46f571aa0d]
-- Commerce Department published a notice titled "Request for Comments on Bolstering Data Center Growth, Resilience, and Security" on 2024-09-04. [^d3873b636810]
+- Wikidata describes In-Q-Tel as "American defense industry venture capital firm". [^3f08d4a9d608]
+- In-Q-Tel lists https://www.iqt.org/ as its official website. [^781422405df2]
+- Commerce Department published a notice titled "Advanced Technology Program Advisory Committee" on 2002-05-02. [^40489d95a82e]
 
 ## Why they matter
 > The one inference in this brief. Everything else is sourced.
@@ -19,9 +20,6 @@ As of 2026-08-31 · nonprofit · 3 sourced statements
 2. Which office signs off, and who else has to agree before it does?
 3. How do you see the relationship between our organizations today?
 
-## Check before the meeting
-- Commerce Department published a notice titled "Advanced Technology Program Advisory Committee" on 2002-05-02. [^40489d95a82e]
-
 ## What I could not find
 - budget — searched usaspending, nothing found
 - decision route — no source in this run covers it
@@ -31,8 +29,8 @@ As of 2026-08-31 · nonprofit · 3 sourced statements
 
 ---
 
-[^0e46f571aa0d]: [Federal Register — Facilitating Opportunities for Advanced Air Mobility](https://www.federalregister.gov/documents/2025/03/17/2025-03602/facilitating-opportunities-for-advanced-air-mobility) · filed · 2025-03-17
-[^d3873b636810]: [Federal Register — Request for Comments on Bolstering Data Center Growth, Resilience, and](https://www.federalregister.gov/documents/2024/09/04/2024-19524/request-for-comments-on-bolstering-data-center-growth-resilience-and-security) · filed · 2024-09-04
+[^3f08d4a9d608]: [Wikidata — In-Q-Tel (Q3109467)](https://www.wikidata.org/wiki/Q3109467) · self-reported · undated
+[^781422405df2]: [Wikidata — In-Q-Tel (Q3109467)](https://www.wikidata.org/wiki/Q3109467) · self-reported · undated
 [^40489d95a82e]: [Federal Register — Advanced Technology Program Advisory Committee](https://www.federalregister.gov/documents/2002/05/02/02-10955/advanced-technology-program-advisory-committee) · filed · 2002-05-02
 
 *Nothing above is asserted without a source. Numbers marked `filed` come from a statutory record; `reported` from press; `self-reported` from the organization itself.*

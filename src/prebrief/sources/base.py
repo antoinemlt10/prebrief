@@ -58,24 +58,35 @@ def titlecase_org(name: str) -> str:
     return " ".join(words)
 
 
-def relevant(document_text: str, entity, term: str) -> bool:
-    """Is a document found on a widened term actually about this entity?
+_FOLD = re.compile(r"[^a-z0-9]+")
 
-    An exact-name match needs no test. A widened one does: searching "NOAA" for
-    the Commercial Data Program returns Pacific cod reallocations, and searching
-    "Commercial Data Program" in a news index returns the payments industry.
-    Both are real results from the first live run, and both are noise.
 
-    The test is a shared adjacent word-pair from the full name — strict enough
-    to drop the cod, loose enough to keep a document that names the program in
-    its own words.
+def _fold(text: str) -> str:
+    """Lowercase, punctuation to single spaces. "In - Q - Tel" and "In-Q-Tel"
+    fold to the same string, so a source's spacing quirks cannot hide a name."""
+    return _FOLD.sub(" ", text.casefold()).strip()
+
+
+def relevant(document_text: str, entity) -> bool:
+    """Is this document actually about the entity? Runs on every match.
+
+    An exact-term match proves nothing: the Federal Register searches full
+    text, so a document that lists an organization once among three hundred
+    licensees comes back as a hit. FCC fee schedules filled the Spire brief
+    that way. A document qualifies only when the entity is named in the text
+    given here — for the Register that is title plus abstract, never the body.
+
+    "Named" means: the full name, an adjacent word-pair from it, the derived
+    initialism (NOAA for the seven-word official name — three letters minimum,
+    so "Spire Global" never becomes "SG" and matches everything), or a Wikidata
+    alias of three or more characters. All matched on word boundaries.
     """
-    if term.casefold() == entity.name.casefold():
-        return True
-    haystack = clean(document_text).casefold()
-    if entity.name.casefold() in haystack:
-        return True
-    return any(bigram in haystack for bigram in entity.name_bigrams())
+    haystack = f" {_fold(clean(document_text))} "
+    needles = [entity.name, *entity.name_bigrams()]
+    if initialism := entity.initialism():
+        needles.append(initialism)
+    needles.extend(a for a in entity.aliases if len(a) >= 3)
+    return any(f" {_fold(n)} " in haystack for n in needles if n and _fold(n))
 
 
 def stamped(claims: list[Claim], response: Response) -> list[Claim]:

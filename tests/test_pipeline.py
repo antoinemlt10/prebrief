@@ -288,6 +288,45 @@ def test_the_specific_wikidata_kind_beats_the_generic_one(tmp_path):
     assert resolve(ORG, cache).kind.value == "public company"
 
 
+def test_resolution_becomes_the_first_identity_claim(seeded):
+    """What the organization is leads "Who they are", sourced to Wikidata,
+    instead of the section opening with procurement leftovers."""
+    _, ctx = seeded
+    brief, _ = build(ORG, ctx)
+    first = brief.claims.get(brief.identity[0])
+    assert first.source_url.startswith("https://www.wikidata.org/wiki/")
+    assert "federal procurement program" in first.text
+    markdown = render_markdown(brief)
+    assert_sourced(markdown, brief)
+
+
+def test_an_old_filed_record_is_background_not_suspect(seeded):
+    """A dated award from a statutory record does not become doubtful with
+    age. Filed-but-old belongs in identity; check_first is for self-reported
+    claims only."""
+    from datetime import date as _date
+
+    from prebrief.brief import Brief
+    from prebrief.claims import Claim, ClaimSet, Tier
+    from prebrief.entities import resolve
+    from prebrief.pipeline import _fill_sections
+
+    cache, ctx = seeded
+    old = Claim(
+        text="Example Department awarded Northbridge Data Systems $1,000,000, "
+        "with a period beginning 2002-05-02.",
+        snippet="Northbridge Data Systems | Example Department | 1000000",
+        source_url="https://example.gov/award/2002",
+        source_title="USAspending award — EPP-2002-0001",
+        tier=Tier.FILED,
+        published=_date(2002, 5, 2),
+    )
+    brief = Brief(entity=resolve(ORG, cache), as_of=AS_OF, claims=ClaimSet([old]))
+    _fill_sections(brief, ctx, [])
+    assert old.id in brief.identity
+    assert brief.check_first == []
+
+
 def test_a_rate_limited_gdelt_is_reported_as_refused_not_empty(seeded):
     """GDELT refuses bursts with a non-2xx. That is not an empty corpus, and
     the brief must not claim 'no reporting exists' when the truth is 'the
@@ -305,6 +344,27 @@ def test_a_rate_limited_gdelt_is_reported_as_refused_not_empty(seeded):
     assert not result.ok
     assert "refused" in result.note and "HTTP 429" in result.note
     assert "No English-language" not in result.note
+
+
+def test_the_library_page_is_generated_from_brief_json(seeded):
+    """The page embeds exactly what the brief.json files hold — no
+    hand-maintained data that could drift from the repository."""
+    import json as _json
+
+    from prebrief.library import render_library
+    from prebrief.render import render_json
+
+    _, ctx = seeded
+    brief, _ = build(ORG, ctx)
+    payload = _json.loads(render_json(brief))
+
+    html = render_library([payload])
+    assert "/*__DATA__*/" not in html, "the data placeholder must be filled"
+    assert ORG in html
+    first_claim = payload["claims"][0]
+    assert first_claim["id"] in html
+    # A </script> inside claim text must not be able to end the script block.
+    assert "</script>" in html and html.count("</script>") == 1
 
 
 def test_offline_run_never_touches_the_network(tmp_path):
